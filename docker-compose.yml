@@ -1,0 +1,43 @@
+version: '2'
+services:
+  mssql-cli:
+    image: ericskang/tools:mssql-cli
+    depends_on:
+      - mssql
+    container_name: mssql-cli
+    command: [bash, -c, "tail -f /dev/null"]
+  sqlpackage:
+    image: ericskang/tools:sqlpackage
+    depends_on: 
+      - mssql
+    container_name: sqlpackage
+    command: [bash, -c, "tail -f /dev/null"]
+  mssql-tools:
+    image: ericskang/sqltools:sqlcmd
+    depends_on:
+      - mssql
+    container_name: mssql-tools
+    command: [bash, -c, "tail -f /dev/null"]
+  webapp:
+    image: ericskang/webapp:latest
+    depends_on:
+      - mssql
+    container_name: webapp
+    ports:
+      - "80:3000"
+  dbtest:
+    image: ericskang/slacker-node-runner:latest
+    depends_on:
+      - mssql
+    container_name: dbtest
+    ports:
+      - 8000:8000  
+  mssql:
+    image: ericskang/unittestdb:latest
+    container_name: mssql
+    ports: 
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "SqlDevOps2017"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
