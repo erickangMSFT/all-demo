@@ -1,5 +1,11 @@
 version: '2'
 services:
+  sqlps:
+    image: tools:sqlps
+    depends_on:
+      - mssql
+    container_name: sqlps
+    command: [bash, -c, "tail -f /dev/null"]
   mssql-cli:
     image: ericskang/tools:mssql-cli
     depends_on:
